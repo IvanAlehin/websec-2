@@ -11,6 +11,8 @@ export default function RouteFinder() {
   const [isSearching, setIsSearching] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [selectionStep, setSelectionStep] = useState(1)
+  const [fromInputValue, setFromInputValue] = useState('')
+  const [toInputValue, setToInputValue] = useState('')
 
   const handleSearchRoute = async () => {
     if (!departureStation || !arrivalStation) {
@@ -48,14 +50,18 @@ export default function RouteFinder() {
     setRouteResults([])
     setErrorMessage(null)
     setSelectionStep(1)
+    setFromInputValue('')
+    setToInputValue('')
   }
 
   const handleMapStationClick = (station) => {
     if (selectionStep === 1) {
       setDepartureStation(station)
+      setFromInputValue(station.title)
       setSelectionStep(2)
     } else {
       setArrivalStation(station)
+      setToInputValue(station.title)
     }
   }
 
@@ -67,10 +73,15 @@ export default function RouteFinder() {
         <div className="form-group">
           <label className="form-label">Откуда</label>
           <StationSearch
-            value={departureStation?.title || ''}
+            value={fromInputValue}
             onStationSelected={(station) => {
               setDepartureStation(station)
-              setSelectionStep(2)
+              if (station) {
+                setFromInputValue(station.title)
+                setSelectionStep(2)
+              } else {
+                setFromInputValue('')
+              }
             }}
             placeholder="Выберите станцию..."
           />
@@ -79,8 +90,15 @@ export default function RouteFinder() {
         <div className="form-group">
           <label className="form-label">Куда</label>
           <StationSearch
-            value={arrivalStation?.title || ''}
-            onStationSelected={setArrivalStation}
+            value={toInputValue}
+            onStationSelected={(station) => {
+              setArrivalStation(station)
+              if (station) {
+                setToInputValue(station.title)
+              } else {
+                setToInputValue('')
+              }
+            }}
             placeholder="Выберите станцию..."
           />
         </div>

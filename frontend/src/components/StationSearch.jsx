@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { railwayAPI } from '../api'
 import { useDebounce } from '../hooks/useDebounce'
 
-export default function StationSearch({ onStationSelected, placeholder, value: propValue }) {
-  const [inputValue, setInputValue] = useState(propValue || '')
+export default function StationSearch({ onStationSelected, placeholder, value }) {
+  const [inputValue, setInputValue] = useState(value || '')
   const [searchResults, setSearchResults] = useState([])
   const [isDropdownVisible, setIsDropdownVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -20,7 +20,7 @@ export default function StationSearch({ onStationSelected, placeholder, value: p
     setIsLoading(true)
     try {
       const results = await railwayAPI.findStations(searchTerm, 10)
-      setSearchResults(results)
+      setSearchResults(results || [])
       setIsDropdownVisible(true)
       setSelectedIndex(-1)
     } catch (error) {
@@ -35,13 +35,16 @@ export default function StationSearch({ onStationSelected, placeholder, value: p
     const newValue = event.target.value
     setInputValue(newValue)
     debouncedSearch(newValue)
+    if (onStationSelected) {
+      onStationSelected(null)
+    }
   }
   
   useEffect(() => {
-    if (propValue && propValue !== "" && propValue !== inputValue) {
-      setInputValue(propValue)
+    if (value !== undefined && value !== inputValue) {
+      setInputValue(value)
     }
-  }, [propValue])
+  }, [value])
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -56,14 +59,16 @@ export default function StationSearch({ onStationSelected, placeholder, value: p
   const handleKeyDown = (event) => {
     if (!isDropdownVisible || searchResults.length === 0) return
     
-    if (event.key === 'ArrowDown') {
+    // preventDefault только для навигации по dropdown
+    if (['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
       event.preventDefault()
+    }
+    
+    if (event.key === 'ArrowDown') {
       setSelectedIndex(prev => prev < searchResults.length - 1 ? prev + 1 : prev)
     } else if (event.key === 'ArrowUp') {
-      event.preventDefault()
       setSelectedIndex(prev => prev > 0 ? prev - 1 : 0)
     } else if (event.key === 'Enter' && selectedIndex >= 0) {
-      event.preventDefault()
       selectStation(searchResults[selectedIndex])
     } else if (event.key === 'Escape') {
       setIsDropdownVisible(false)
@@ -89,7 +94,6 @@ export default function StationSearch({ onStationSelected, placeholder, value: p
         onFocus={() => searchResults.length > 0 && setIsDropdownVisible(true)}
         placeholder={placeholder}
         autoComplete="off"
-        readOnly={!!propValue}
       />
       
       {isLoading && <span className="loading-indicator">Загрузка...</span>}

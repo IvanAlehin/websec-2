@@ -72,7 +72,12 @@ export default function App() {
                 <div className="search-input-wrapper">
                   <StationSearch
                     value={searchInputValue}
-                    onStationSelected={setCurrentStation}
+                    onStationSelected={(station) => {
+                      setCurrentStation(station)
+                      if (station) {
+                        setSearchInputValue(station.title)
+                      }
+                    }}
                     placeholder="Введите название станции..."
                   />
                 </div>

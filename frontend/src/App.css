@@ -1,0 +1,520 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f0f4f8;
+  color: #000000;
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.navigation-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.nav-tab {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-tab.active {
+  background: #059669;
+  color: white;
+}
+
+.nav-tab:hover:not(.active) {
+  background: #e5e7eb;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.search-section-card,
+.map-section-card,
+.schedule-section-card,
+.search-form-section,
+.map-section-wrapper,
+.search-results-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-with-button {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.search-input-wrapper {
+  flex: 1;
+}
+
+.search-button {
+  padding: 0.875rem 2rem;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.search-button:hover:not(:disabled) {
+  background: #047857;
+  transform: translateY(-1px);
+}
+
+.search-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input-field {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  color: #000000;
+}
+
+.search-input-field:focus {
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+.search-input-field[readonly] {
+  background-color: #f9fafb;
+  cursor: default;
+}
+
+.loading-indicator {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-top: 0.25rem;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid #f3f4f6;
+  color: #000000;
+}
+
+.dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.dropdown-option:hover,
+.dropdown-option.selected {
+  background: #ecfdf5;
+}
+
+.dropdown-option.no-results {
+  cursor: default;
+  color: #6b7280;
+}
+
+.station-title {
+  font-weight: 500;
+  color: #000000;
+}
+
+.station-type-badge {
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.map-section {
+  width: 100%;
+}
+
+.map-header {
+  font-weight: 600;
+  color: #059669;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+}
+
+.schedule-title {
+  font-size: 1.25rem;
+  color: #059669;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #d1fae5;
+  font-weight: 600;
+}
+
+.schedule-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.train-card-wrapper {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.train-card-wrapper:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #059669;
+  transform: translateY(-2px);
+}
+
+.train-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.train-number-display {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.train-badges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.status-soon {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.status-departed {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.status-badge.status-scheduled {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.train-type-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.train-route-display {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.route-point {
+  padding: 0.75rem;
+  text-align: center;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.route-point.departure-point {
+  border-left: 3px solid #059669;
+}
+
+.route-point.arrival-point {
+  border-right: 3px solid #047857;
+}
+
+.point-time {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.point-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0;
+}
+
+.point-station {
+  font-size: 0.9rem;
+  color: #000000;
+  font-weight: 500;
+}
+
+.route-arrow {
+  color: #059669;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.train-platform-info {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.empty-schedule,
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.error-state {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 8px;
+  border-left: 4px solid #b91c1c;
+}
+
+.route-finder-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  color: #059669;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.error-message-box {
+  padding: 1rem;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #b91c1c;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 0.875rem 2rem;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #047857;
+}
+
+.btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 0.875rem 2rem;
+  background: white;
+  color: #059669;
+  border: 2px solid #059669;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #ecfdf5;
+}
+
+.map-instruction {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: #ecfdf5;
+  color: #065f46;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.results-title {
+  font-size: 1.25rem;
+  color: #059669;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.app-footer {
+  background: white;
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.5rem;
+  }
+
+  .navigation-tabs {
+    flex-direction: column;
+  }
+
+  .nav-tab {
+    width: 100%;
+  }
+
+  .search-with-button {
+    flex-direction: column;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .train-route-display {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .route-arrow {
+    transform: rotate(90deg);
+    margin: 0.5rem 0;
+  }
+
+  .map-wrapper {
+    height: 300px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}

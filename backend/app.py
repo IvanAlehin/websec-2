@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 API_KEY = os.getenv('YANDEX_KEY')
-BASE_URL = 'https://api.rasp.yandex.net/v3.0'
+BASE_URL = os.getenv('YANDEX_BASE_URL', 'https://api.rasp.yandex.net/v3.0')
 cache = {}
 
 @app.after_request

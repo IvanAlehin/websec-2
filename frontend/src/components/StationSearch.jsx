@@ -31,12 +31,14 @@ export default function StationSearch({ onStationSelected, placeholder, value: p
     }
   }, 300)
   
+  const handleInputChange = (event) => {
+    const newValue = event.target.value
+    setInputValue(newValue)
+    debouncedSearch(newValue)
+  }
+  
   useEffect(() => {
-    debouncedSearch(inputValue)
-  }, [inputValue])
-
-  useEffect(() => {
-    if (propValue !== undefined && propValue !== inputValue) {
+    if (propValue && propValue !== "" && propValue !== inputValue) {
       setInputValue(propValue)
     }
   }, [propValue])
@@ -50,10 +52,6 @@ export default function StationSearch({ onStationSelected, placeholder, value: p
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
-  
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value)
-  }
   
   const handleKeyDown = (event) => {
     if (!isDropdownVisible || searchResults.length === 0) return

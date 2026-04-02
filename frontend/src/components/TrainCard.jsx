@@ -1,33 +1,8 @@
+import { formatTime, formatDate, getStatusInfo } from '../utils/formatters'
+
 export default function TrainCard({ trainData, timeStatus, stationInfo }) {
   
-  const formatTime = (timeValue) => {
-    if (!timeValue) return '—'
-    
-    if (typeof timeValue === 'string') {
-      const parts = timeValue.split(':')
-      if (parts.length >= 2) {
-        return `${parts[0]}:${parts[1]}`
-      }
-      return timeValue
-    }
-    
-    return '—'
-  }
-
-  const formatDate = (timeValue) => {
-    if (!timeValue) return ''
-    return ''
-  }
-
-  const getStatusInfo = () => {
-    switch (timeStatus) {
-      case 'soon': return { className: 'status-soon', label: 'Скоро' }
-      case 'departed': return { className: 'status-departed', label: 'Ушёл' }
-      default: return { className: 'status-scheduled', label: 'По расписанию' }
-    }
-  }
-
-  const statusInfo = getStatusInfo()
+  const statusInfo = getStatusInfo(timeStatus)
   
   const threadTitle = trainData.thread?.title || ''
   const trainNumber = trainData.number || trainData.thread?.number || ''

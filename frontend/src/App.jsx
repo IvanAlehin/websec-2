@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import StationSearch from './components/StationSearch'
 import StationMap from './components/StationMap'
 import ScheduleDisplay from './components/ScheduleDisplay'
@@ -12,12 +12,18 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [searchInputValue, setSearchInputValue] = useState('')
+  
+  useEffect(() => {
+    railwayAPI.getStationsData().catch(err => {
+      console.error('Failed to preload stations:', err)
+    })
+  }, [])
 
   const loadStationSchedule = async (station) => {
     if (!station) return
     
     setCurrentStation(station)
-    setSearchInputValue(station.title) // Обновляем инпут
+    setSearchInputValue(station.title)
     setIsLoading(true)
     setError(null)
     
@@ -66,7 +72,7 @@ export default function App() {
                 <div className="search-input-wrapper">
                   <StationSearch
                     value={searchInputValue}
-                    onStationSelected={loadStationSchedule}
+                    onStationSelected={setCurrentStation}
                     placeholder="Введите название станции..."
                   />
                 </div>

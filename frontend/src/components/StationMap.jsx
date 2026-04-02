@@ -7,14 +7,13 @@ import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import { Style, Circle as CircleStyle, Fill, Stroke } from 'ol/style'
 import { railwayAPI } from '../api'
+import { getSourceOfVectorLayerByName } from '../utils/layerInstruments'
 
 export default function StationMap({ onStationClick }) {
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
-  const vectorSourceRef = useRef(null)
   const onStationClickRef = useRef(onStationClick)
 
-  // Обновляем ref при изменении callback
   useEffect(() => {
     onStationClickRef.current = onStationClick
   }, [onStationClick])
@@ -23,7 +22,6 @@ export default function StationMap({ onStationClick }) {
     if (!mapContainerRef.current || mapInstanceRef.current) return
     
     const vectorSource = new VectorSource({ features: [] })
-    vectorSourceRef.current = vectorSource
     
     const vectorLayer = new VectorLayer({
       source: vectorSource,
@@ -35,6 +33,7 @@ export default function StationMap({ onStationClick }) {
         })
       })
     })
+    vectorLayer.set('name', 'stations-layer')
     
     const mapInstance = new Map({
       target: mapContainerRef.current,
@@ -76,7 +75,8 @@ export default function StationMap({ onStationClick }) {
     mapInstanceRef.current = mapInstance
     
     railwayAPI.getMapStations().then(stationsList => {
-      if (vectorSourceRef.current) {
+      const source = getSourceOfVectorLayerByName(mapInstance, 'stations-layer')
+      if (source) {
         const features = stationsList.map(station => {
           const feature = new Feature({
             geometry: new Point(fromLonLat([station.longitude, station.latitude]))
@@ -84,16 +84,10 @@ export default function StationMap({ onStationClick }) {
           feature.set('stationInfo', station)
           return feature
         })
-        vectorSourceRef.current.addFeatures(features)
+        source.addFeatures(features)
       }
     })
     
-    return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.setTarget(null)
-        mapInstanceRef.current = null
-      }
-    }
   }, [])
 
   return (

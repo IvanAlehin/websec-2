@@ -36,10 +36,10 @@ export default function ScheduleDisplay({ scheduleItems, stationInfo }) {
   return (
     <div className="schedule-container">
       {scheduleItems.map((train, index) => {
-        const key = `${train.number || 'train'}-${train.departure || index}`
+        const uniqueKey = `${train.thread?.uid || train.number || 'train'}-${train.departure || index}-${index}`
         return (
           <TrainCard
-            key={key}
+            key={uniqueKey}
             trainData={train}
             timeStatus={getCurrentTimeStatus(train.departure)}
             stationInfo={stationInfo}

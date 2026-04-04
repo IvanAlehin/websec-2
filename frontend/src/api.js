@@ -1,6 +1,4 @@
-const API_BASE = '/api'
-const CACHE_KEY = 'railway_stations_data_v3'
-const CACHE_DURATION = 24 * 60 * 60 * 1000
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 // Границы фильтрации станций (Самарская область + соседние регионы)
 // Самара: ~53.2°N, 50.1°E
@@ -23,39 +21,14 @@ export const railwayAPI = {
       throw new Error(`HTTP error: ${response.status}`)
     }
     
-    const data = await response.json()
-    return data
+    return await response.json()
   },
 
   async getStationsData() {
     if (cachedStations) return cachedStations
     
-    try {
-      const cached = localStorage.getItem(CACHE_KEY)
-      if (cached) {
-        const { timestamp, data } = JSON.parse(cached)
-        if (Date.now() - timestamp < CACHE_DURATION) {
-          cachedStations = data
-          return data
-        }
-      }
-    } catch (error) {
-      console.error('Cache read error:', error)
-    }
-    
     const rawData = await this.requestData('/stations')
     cachedStations = this.extractStations(rawData)
-    
-    try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({
-        timestamp: Date.now(),
-        cachedStations: cachedStations
-      }))
-    } catch (error) {
-      console.error('Cache write error:', error)
-      localStorage.removeItem(CACHE_KEY)
-    }
-    
     return cachedStations
   },
 
@@ -92,6 +65,7 @@ export const railwayAPI = {
         }
       }
     }
+
     return stationsList
   },
 
@@ -128,8 +102,8 @@ export const railwayAPI = {
     if (!allStations) return []
     
     return allStations.filter(station => 
-      station?.latitude && 
-      station?.longitude &&
+      station.latitude && 
+      station.longitude &&
       station.latitude >= MAP_BOUNDS.minLat && 
       station.latitude <= MAP_BOUNDS.maxLat &&
       station.longitude >= MAP_BOUNDS.minLon &&

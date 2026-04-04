@@ -12,10 +12,11 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [searchInputValue, setSearchInputValue] = useState('')
-  
+  const [mapStations, setMapStations] = useState([])
+
   useEffect(() => {
-    railwayAPI.getStationsData().catch(err => {
-      console.error('Failed to preload stations:', err)
+    railwayAPI.getMapStations().then(stations => {
+      setMapStations(stations)
     })
   }, [])
 
@@ -92,7 +93,10 @@ export default function App() {
             </div>
             
             <div className="map-section-card">
-              <StationMap onStationClick={loadStationSchedule} />
+              <StationMap 
+                onStationClick={loadStationSchedule} 
+                stations={mapStations}
+              />
             </div>
             
             {currentStation && (
@@ -109,7 +113,7 @@ export default function App() {
             )}
           </>
         ) : (
-          <RouteFinder />
+          <RouteFinder stations={mapStations} />
         )}
       </main>
       

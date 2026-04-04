@@ -9,6 +9,7 @@ export default function StationSearch({ onStationSelected, placeholder, value })
   const [isLoading, setIsLoading] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const containerRef = useRef(null)
+  const inputId = `search-${Math.random().toString(36).substr(2, 8)}`
   
   const debouncedSearch = useDebounce(async (searchTerm) => {
     if (!searchTerm || searchTerm.trim().length < 2) {
@@ -85,7 +86,12 @@ export default function StationSearch({ onStationSelected, placeholder, value })
   
   return (
     <div className="search-container" ref={containerRef}>
+      <label htmlFor={inputId} style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: -1, overflow: 'hidden' }}>
+        Поиск станции
+      </label>
       <input
+        id={inputId}
+        name="station-search"
         type="text"
         className="search-input-field"
         value={inputValue}

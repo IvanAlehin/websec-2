@@ -4,7 +4,7 @@ import StationMap from './StationMap'
 import TrainCard from './TrainCard'
 import { railwayAPI } from '../api'
 
-export default function RouteFinder() {
+export default function RouteFinder({ stations }) {
   const [departureStation, setDepartureStation] = useState(null)
   const [arrivalStation, setArrivalStation] = useState(null)
   const [routeResults, setRouteResults] = useState([])
@@ -121,7 +121,7 @@ export default function RouteFinder() {
       </div>
       
       <div className="map-section-wrapper">
-        <StationMap onStationClick={handleMapStationClick} />
+        <StationMap onStationClick={handleMapStationClick} stations={stations} />
         <div className="map-instruction">
           {selectionStep === 1 
             ? 'Шаг 1: Нажмите на карту, чтобы выбрать станцию отправления' 

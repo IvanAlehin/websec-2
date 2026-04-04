@@ -6,10 +6,14 @@ import { fromLonLat } from 'ol/proj'
 import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import { Style, Circle as CircleStyle, Fill, Stroke } from 'ol/style'
-import { railwayAPI } from '../api'
-import { getSourceOfVectorLayerByName } from '../utils/layerInstruments'
 
-export default function StationMap({ onStationClick }) {
+function getSourceOfVectorLayerByName(mapObject, layerName) {
+  if (!mapObject) return null
+  const layer = mapObject.getAllLayers().find(l => l.get('name') === layerName)
+  return layer?.getSource() || null
+}
+
+export default function StationMap({ onStationClick, stations }) {
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const onStationClickRef = useRef(onStationClick)
@@ -51,17 +55,12 @@ export default function StationMap({ onStationClick }) {
     })
     
     mapInstance.on('click', (event) => {
-      const clickedFeatures = []
       mapInstance.forEachFeatureAtPixel(event.pixel, (feature) => {
-        clickedFeatures.push(feature)
-      })
-      
-      if (clickedFeatures.length > 0) {
-        const stationData = clickedFeatures[0].get('stationInfo')
+        const stationData = feature.get('stationInfo')
         if (stationData && onStationClickRef.current) {
           onStationClickRef.current(stationData)
         }
-      }
+      })
     })
     
     mapInstance.on('pointermove', (event) => {
@@ -73,22 +72,26 @@ export default function StationMap({ onStationClick }) {
     })
     
     mapInstanceRef.current = mapInstance
-    
-    railwayAPI.getMapStations().then(stationsList => {
-      const source = getSourceOfVectorLayerByName(mapInstance, 'stations-layer')
-      if (source) {
-        const features = stationsList.map(station => {
-          const feature = new Feature({
-            geometry: new Point(fromLonLat([station.longitude, station.latitude]))
-          })
-          feature.set('stationInfo', station)
-          return feature
-        })
-        source.addFeatures(features)
-      }
-    })
-    
   }, [])
+
+  useEffect(() => {
+    if (!mapInstanceRef.current || !stations || stations.length === 0) return
+    
+    const source = getSourceOfVectorLayerByName(mapInstanceRef.current, 'stations-layer')
+    if (source) {
+      source.clear()
+      const features = stations.map(station => {
+        if (!station.longitude || !station.latitude) return null
+        const feature = new Feature({
+          geometry: new Point(fromLonLat([station.longitude, station.latitude]))
+        })
+        feature.set('stationInfo', station)
+        return feature
+      }).filter(f => f !== null)
+      
+      source.addFeatures(features)
+    }
+  }, [stations])
 
   return (
     <div className="map-section">
